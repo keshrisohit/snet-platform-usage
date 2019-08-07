@@ -1,6 +1,6 @@
 import json
 
-from metering.utils import make_response
+from utils import make_response
 
 
 def get_requried_params(event):
@@ -9,22 +9,17 @@ def get_requried_params(event):
         service_id = event['queryStringParameters']['service_id']
         user_id = event['queryStringParameters']['service_id']
     except Exception as e:
-
-        make_response(400, "Please pass required parameters org_id, service_id ,user_id")
+         raise e
 
     return org_id, service_id, user_id
 
 
-def hello(event, context):
+def main(event, context):
     org_id, service_id, user_id = get_requried_params(event)
+
     body = {
         "message": "Go Serverless v1.0! Your function executed successfully!",
         "input": event
     }
 
-    response = {
-        "statusCode": 200,
-        "body": json.dumps(body)
-    }
-
-    return response
+    return make_response(200,json.dumps(body))
