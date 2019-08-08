@@ -1,25 +1,35 @@
 import json
 
+from services import UsageService
 from utils import make_response
 
+usage_service = UsageService()
 
-def get_requried_params(event):
+
+def get_and_validate_requried_params(event):
     try:
-        org_id = event['queryStringParameters']['org_id']
+        org_id = event['queryStringParameters']['organisation_id']
         service_id = event['queryStringParameters']['service_id']
-        user_id = event['queryStringParameters']['service_id']
+        user_id = event['queryStringParameters']['user_id']
     except Exception as e:
-         raise e
+        raise e
 
     return org_id, service_id, user_id
 
 
 def main(event, context):
-    org_id, service_id, user_id = get_requried_params(event)
+    org_id, service_id, user_id = get_and_validate_requried_params(event)
+    free_call_details = usage_service.get_free_call_details(
+        user_id, org_id, service_id)
 
-    body = {
-        "message": "Go Serverless v1.0! Your function executed successfully!",
-        "input": event
+    return_value = {
+        "statusCode": 200,
+        "headers": {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
+        },
+        "body": json.dumps(free_call_details)
     }
 
-    return make_response(200,json.dumps(body))
+    return return_value

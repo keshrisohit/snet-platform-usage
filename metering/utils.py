@@ -7,6 +7,7 @@ def make_response(status_code, body):
         "body": body
     }
 
+
 def configure_log(logger):
     logger.setLevel(logging.INFO)
 
@@ -19,3 +20,9 @@ def configure_log(logger):
     handler.setFormatter(formatter)
     # add the handlers to the logger
     logger.addHandler(handler)
+
+
+def check_given_key(key, dict):
+    if key in dict:
+        return True
+    return False
